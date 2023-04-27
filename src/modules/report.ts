@@ -37,13 +37,13 @@ export const buildReport = (
 
   const reportHeader = `- **Result**: ${projectStatus}\n- Triggered by @${context.actor} on \`${context.eventName}\`${pullRequestNumber != null ? `\n- Pull request number: ${pullRequestNumber}` : ''}`;
 
-  return `### SonarQube Quality Gate Result
+  return `### Sonar Qube Quality Gate Result
 ${reportHeader}
 
 | Metric | Status | Value | Error Threshold |
 |:------:|:------:|:-----:|:---------------:|
 ${resultTable}
 
-[View on SonarQube](${projectURL})
+[View on SonarCloud](${projectURL})
 ###### _updated: ${updatedDate} (${updatedOffset})_`;
 };
