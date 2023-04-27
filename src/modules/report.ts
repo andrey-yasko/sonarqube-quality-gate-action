@@ -27,7 +27,8 @@ export const buildReport = (
   context: Context,
   pullRequestNumber?: number | null
 ) => {
-  const projectURL = trimTrailingSlash(hostURL) + `/dashboard?id=${projectKey}`;
+  const pullRequestString = pullRequestNumber != null ? `&pullRequest=${pullRequestNumber}` : '';
+  const projectURL = `${trimTrailingSlash(hostURL)}/summary/new_code?id=${projectKey}${pullRequestString}`;
   const projectStatus = getStatusEmoji(result.projectStatus.status);
 
   const resultTable = result.projectStatus.conditions.map(buildRow).join("\n");

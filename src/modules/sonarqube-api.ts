@@ -1,5 +1,6 @@
 import axios from "axios";
 import { QualityGate } from "./models";
+import { trimTrailingSlash } from "./utils";
 
 export const fetchQualityGate = async (
   url: string,
@@ -7,14 +8,12 @@ export const fetchQualityGate = async (
   token: string,
   pullRequestNumber?: number | null
 ): Promise<QualityGate> => {
-  const params = {
-    projectKey,
-    ...(pullRequestNumber != null && { pullRequest: pullRequestNumber }),
-  };
+  const queryString = pullRequestNumber != null ? `?projectKey=${projectKey}&pullRequest=${pullRequestNumber}` : `?projectKey=${projectKey}`;
+  const targetUrl = `${trimTrailingSlash(url)}/api/qualitygates/project_status${queryString}`;
+  console.log(`Target URL: ${targetUrl}`);
   const response = await axios.get<QualityGate>(
-    `${url}/api/qualitygates/project_status`,
+    targetUrl,
     {
-      params,
       auth: {
         username: token,
         password: "",
