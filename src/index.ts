@@ -13,15 +13,16 @@ import { findComment } from "./modules/find-comment/main";
       projectKey: core.getInput("sonar-project-key"),
       token: core.getInput("sonar-token"),
       commentDisabled: core.getInput("disable-pr-comment") === "true",
-      failOnQualityGateError:
-        core.getInput("fail-on-quality-gate-error") === "true",
+      failOnQualityGateError: core.getInput("fail-on-quality-gate-error") === "true",
       githubToken: core.getInput("github-token"),
+      pullRequestNumber: core.getInput("pull-request-number") ? parseInt(core.getInput("pull-request-number")) : null,
     };
 
     const result = await fetchQualityGate(
       inputs.hostURL,
       inputs.projectKey,
-      inputs.token
+      inputs.token,
+      inputs.pullRequestNumber
     );
 
     core.setOutput("project-status", result.projectStatus.status);
@@ -43,7 +44,8 @@ import { findComment } from "./modules/find-comment/main";
         result,
         inputs.hostURL,
         inputs.projectKey,
-        context
+        context,
+        inputs.pullRequestNumber
       );
 
       console.log("Finding comment associated with the report...");

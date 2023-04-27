@@ -4,14 +4,17 @@ import { QualityGate } from "./models";
 export const fetchQualityGate = async (
   url: string,
   projectKey: string,
-  token: string
+  token: string,
+  pullRequestNumber?: number | null
 ): Promise<QualityGate> => {
+  const params = {
+    projectKey,
+    ...(pullRequestNumber != null && { pullRequest: pullRequestNumber }),
+  };
   const response = await axios.get<QualityGate>(
     `${url}/api/qualitygates/project_status`,
     {
-      params: {
-        projectKey,
-      },
+      params,
       auth: {
         username: token,
         password: "",
