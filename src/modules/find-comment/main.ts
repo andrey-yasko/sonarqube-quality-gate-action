@@ -38,6 +38,9 @@ export async function findComment(inputs: Inputs): Promise<Comment | undefined> 
     issue_number: inputs.issueNumber
   }
 
+  // Console log parameters for debugging
+  console.log('Parameters: ', parameters.issue_number, parameters.owner, parameters.repo)
+
   if (inputs.direction == 'first') {
     for await (const {data: comments} of octokit.paginate.iterator(
       octokit.rest.issues.listComments,

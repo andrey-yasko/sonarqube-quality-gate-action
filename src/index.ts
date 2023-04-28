@@ -56,7 +56,7 @@ import { findComment } from "./modules/find-comment/main";
         issueNumber: context.issue.number,
         commentAuthor: "github-actions[bot]",
         bodyIncludes: "SonarQube Quality Gate Result",
-        direction: "first",
+        direction: "last",
       });
 
       if (issueComment) {
