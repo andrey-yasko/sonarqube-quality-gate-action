@@ -51,7 +51,7 @@ export async function findComment(inputs: Inputs): Promise<Comment | undefined> 
         console.log('Fetched comments:', comments)
 
         // Search each page for the comment
-        const comment = comments.find(comment =>
+        const comment = comments.find((comment: Comment) =>
           findCommentPredicate(inputs, comment)
         )
         if (comment) {
@@ -67,7 +67,7 @@ export async function findComment(inputs: Inputs): Promise<Comment | undefined> 
       )
       console.log('Fetched comments:', comments)
       comments.reverse()
-      const comment = comments.find(comment =>
+      const comment = comments.find((comment: Comment) =>
         findCommentPredicate(inputs, comment)
       )
       if (comment) {
@@ -82,6 +82,7 @@ export async function findComment(inputs: Inputs): Promise<Comment | undefined> 
   console.log('Comment not found')
   return undefined
 }
+
 
 function getErrorMessage(error: unknown) {
   if (error instanceof Error) return error.message
