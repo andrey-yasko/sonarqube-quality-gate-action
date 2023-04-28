@@ -50,7 +50,7 @@ import { findComment } from "./modules/find-comment/main";
 
       console.log("Finding comment associated with the report...");
       console.log("Issue Number: ", context.issue.number);
-      console.log(context.repo.owner, context.repo.repo, context.issue.number, context.issue.body);
+      console.log(context.repo.owner, context.repo.repo, context.issue.number);
 
       const issueComment = await findComment({
         token: inputs.githubToken,

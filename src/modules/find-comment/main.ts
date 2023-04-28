@@ -18,14 +18,20 @@ interface Comment {
 }
 
 function findCommentPredicate(inputs: Inputs, comment: Comment): boolean {
-  return (
-    (inputs.commentAuthor && comment.user
-      ? comment.user.login === inputs.commentAuthor
-      : true) &&
-    (inputs.bodyIncludes && comment.body
-      ? comment.body.includes(inputs.bodyIncludes)
-      : true)
-  )
+  const authorMatch = inputs.commentAuthor && comment.user
+    ? comment.user.login === inputs.commentAuthor
+    : true;
+
+  const bodyMatch = inputs.bodyIncludes && comment.body
+    ? comment.body.includes(inputs.bodyIncludes)
+    : true;
+
+  // Log the evaluation of the predicate
+  console.log('Evaluating comment:', comment);
+  console.log('Author match:', authorMatch);
+  console.log('Body match:', bodyMatch);
+
+  return authorMatch && bodyMatch;
 }
 
 export async function findComment(inputs: Inputs): Promise<Comment | undefined> {
