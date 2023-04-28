@@ -25,12 +25,6 @@ function findCommentPredicate(inputs: Inputs, comment: Comment): boolean {
   const bodyMatch = inputs.bodyIncludes && comment.body
     ? comment.body.includes(inputs.bodyIncludes)
     : true;
-
-  // Log the evaluation of the predicate
-  console.log('Evaluating comment:', comment);
-  console.log('Author match:', authorMatch);
-  console.log('Body match:', bodyMatch);
-
   return authorMatch && bodyMatch;
 }
 
@@ -44,24 +38,17 @@ export async function findComment(inputs: Inputs): Promise<Comment | undefined> 
     issue_number: inputs.issueNumber
   }
 
-  // Console log parameters for debugging
-  console.log('Parameters: ', parameters.issue_number, parameters.owner, parameters.repo)
-
   try {
     if (inputs.direction == 'first') {
       for await (const {data: comments} of octokit.paginate.iterator(
         octokit.rest.issues.listComments,
         parameters
       )) {
-        // Log the comments fetched from the API
-        console.log('Fetched comments:', comments)
-
         // Search each page for the comment
         const comment = comments.find((comment: Comment) =>
           findCommentPredicate(inputs, comment)
         )
         if (comment) {
-          console.log('Found comment:', comment)
           return comment
         }
       }
@@ -71,13 +58,11 @@ export async function findComment(inputs: Inputs): Promise<Comment | undefined> 
         octokit.rest.issues.listComments,
         parameters
       )
-      console.log('Fetched comments:', comments)
       comments.reverse()
       const comment = comments.find((comment: Comment) =>
         findCommentPredicate(inputs, comment)
       )
       if (comment) {
-        console.log('Found comment:', comment)
         return comment
       }
     }
