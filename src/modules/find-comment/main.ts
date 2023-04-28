@@ -41,29 +41,45 @@ export async function findComment(inputs: Inputs): Promise<Comment | undefined> 
   // Console log parameters for debugging
   console.log('Parameters: ', parameters.issue_number, parameters.owner, parameters.repo)
 
-  if (inputs.direction == 'first') {
-    for await (const {data: comments} of octokit.paginate.iterator(
-      octokit.rest.issues.listComments,
-      parameters
-    )) {
-      // Search each page for the comment
+  try {
+    if (inputs.direction == 'first') {
+      for await (const {data: comments} of octokit.paginate.iterator(
+        octokit.rest.issues.listComments,
+        parameters
+      )) {
+        // Log the comments fetched from the API
+        console.log('Fetched comments:', comments)
+
+        // Search each page for the comment
+        const comment = comments.find(comment =>
+          findCommentPredicate(inputs, comment)
+        )
+        if (comment) {
+          console.log('Found comment:', comment)
+          return comment
+        }
+      }
+    } else {
+      // direction == 'last'
+      const comments = await octokit.paginate(
+        octokit.rest.issues.listComments,
+        parameters
+      )
+      console.log('Fetched comments:', comments)
+      comments.reverse()
       const comment = comments.find(comment =>
         findCommentPredicate(inputs, comment)
       )
-      if (comment) return comment
+      if (comment) {
+        console.log('Found comment:', comment)
+        return comment
+      }
     }
-  } else {
-    // direction == 'last'
-    const comments = await octokit.paginate(
-      octokit.rest.issues.listComments,
-      parameters
-    )
-    comments.reverse()
-    const comment = comments.find(comment =>
-      findCommentPredicate(inputs, comment)
-    )
-    if (comment) return comment
+  } catch (error) {
+    console.error('Error fetching comments:', getErrorMessage(error))
   }
+
+  console.log('Comment not found')
   return undefined
 }
 
